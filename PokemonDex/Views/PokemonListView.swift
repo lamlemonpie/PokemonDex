@@ -58,7 +58,7 @@ struct PokemonListView: View {
             .onAppear {
                 pokemonViewModel.allPokemon()
             }
-            .navigationTitle("Pokemon List: \(pokemonViewModel.pokemonList.count)")
+            .navigationTitle("Pokemon List")
             .navigationBar(backgroundColor: Color("PokemonHeaderBackground"))
         }
         .navigationViewStyle(StackNavigationViewStyle())

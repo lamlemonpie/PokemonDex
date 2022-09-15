@@ -17,18 +17,22 @@ struct PokemonCellView: View {
 
     var body: some View {
         HStack {
-            Text("Image").frame(width: 72.0, height: 72.0)
-
-            Spacer()
+            AsyncImage(url: URL(string: pokemon.sprites?.frontDefault ?? "")) { image in
+                image
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+            } placeholder: {
+                ProgressView()
+            }
+            .frame(width: 72.0, height: 72.0)
 
             VStack(alignment: .leading) {
-                Text("\(pokemon.name ?? "Name")")
+                Text("\(pokemon.name?.capitalized ?? "Name")")
                     .fontWeight(.semibold)
 
-                Text("#001")
+                Text(String(format: "#%03d", pokemon.id))
             }
-
-            Spacer()
+            .padding(.init(top: 0.0, leading: 16.0, bottom: 0.0, trailing: 14.0))
 
             HStack {
                 Text("X").frame(width: 30.0, height: 30.0)

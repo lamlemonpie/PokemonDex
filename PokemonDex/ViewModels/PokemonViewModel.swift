@@ -6,30 +6,64 @@
 //
 
 import Foundation
+import Combine
 
 final class PokemonViewModel: ObservableObject {
-    var client: PokemonAPI
+    private var client: PokemonAPI
+    private var cancellables = Set<AnyCancellable>()
+    private var modelKey = "pokemonViewModel"
+    private var restoredFromUserDefaults = false
 
-    @Published var pokemonList: [Pokemon] = []
+    @Published var pokemonList: [Pokemon] = [] {
+        didSet {
+            saveToUserDefaults()
+        }
+    }
     @Published var isLoading = false
 
     init(client: PokemonAPI = PokemonClient()) {
         self.client = client
 
+        restoreFromUserDefaults()
+
         setBindings()
     }
 
     func setBindings() {
-        client
-            .isLoadingPublisher
-            .assign(to: &$isLoading)
+        if !restoredFromUserDefaults {
+            client
+                .isLoadingPublisher
+                .assign(to: &$isLoading)
 
-        client
-            .pokemonsPublisher
-            .assign(to: &$pokemonList)
+            client
+                .pokemonsPublisher
+                .sink { pokemons in
+                    self.pokemonList = pokemons
+                }
+                .store(in: &cancellables)
+        }
     }
 
     func allPokemon() {
-        client.allPokemon()
+        if !restoredFromUserDefaults {
+            client.allPokemon()
+        }
+    }
+
+
+    func saveToUserDefaults() {
+        let encoder = JSONEncoder()
+        if let data = try? encoder.encode(pokemonList) {
+            UserDefaults.standard.set(data, forKey: modelKey)
+        }
+    }
+
+    func restoreFromUserDefaults() {
+        let decoder = JSONDecoder()
+        if  let data = UserDefaults.standard.data(forKey: modelKey),
+            let decodedPokemons = try? decoder.decode([Pokemon].self, from: data) {
+            pokemonList = decodedPokemons
+            restoredFromUserDefaults = true
+        }
     }
 }

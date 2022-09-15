@@ -7,6 +7,6 @@
 
 import Foundation
 
-struct PokemonSprite: Equatable, Hashable {
+struct PokemonSprite: Equatable, Hashable, Codable {
     let frontDefault: String
 }
