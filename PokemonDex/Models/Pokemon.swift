@@ -12,5 +12,5 @@ struct Pokemon: Identifiable, Hashable, Codable {
     let name: String?
     let generation: String?
     let types: [PokemonType]?
-    let sprites: PokemonSprite?
+    let sprites: PokemonSprite
 }

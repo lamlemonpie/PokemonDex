@@ -29,6 +29,6 @@ struct PokemonInfoView_Previews: PreviewProvider {
             name: "Bulbasaur",
             generation: "I",
             types: nil,
-            sprites: nil))
+            sprites: PokemonSprite(frontDefault: "")))
     }
 }
