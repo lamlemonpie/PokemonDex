@@ -9,7 +9,7 @@ import Foundation
 import Apollo
 import Combine
 
-final class PokemonClient: PokemonAPI {
+final class PokemonClient: PokemonAPI, ObservableObject {
     static var shared = PokemonClient()
     private(set) var apollo: ApolloClient?
 
@@ -40,9 +40,10 @@ final class PokemonClient: PokemonAPI {
                 if let pokemons = queryData.data?.allPokemon {
                     let compactedPokemons = pokemons.compactMap { $0 }
                     let newPokemons: [Pokemon?] = compactedPokemons.map { pokemon in
-                        guard let id = pokemon.id else { return nil}
-                        guard let frontDefault: String = pokemon.sprites?.frontDefault else { return nil}
-//                        let types = pokemon.types?.compactMap { PokemonType(id: $0?.id, name: $0?.name) }
+                        guard let id = pokemon.id else { return nil }
+                        guard let types = pokemon.types else { return nil }
+                        let compactedTypes = types.compactMap { $0 }
+                        guard let frontDefault: String = pokemon.sprites?.frontDefault else { return nil }
                         let sprites = PokemonSprite(frontDefault: frontDefault)
 
                         return Pokemon(

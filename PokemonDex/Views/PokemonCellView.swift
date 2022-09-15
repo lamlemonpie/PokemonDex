@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct PokemonCellView: View {
     let pokemon: Pokemon
@@ -13,18 +14,14 @@ struct PokemonCellView: View {
     let rectangle: some View = RoundedRectangle(cornerRadius: 16)
         .fill(Color("PokemonCell"))
         .padding(.leading, 24.0)
-        .frame(maxWidth: .infinity, maxHeight: 80.0)
+        .frame(maxWidth: .infinity, minHeight: 80.0)
 
     var body: some View {
         HStack {
-            AsyncImage(url: URL(string: pokemon.sprites?.frontDefault ?? "")) { image in
-                image
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-            } placeholder: {
-                ProgressView()
-            }
-            .frame(width: 72.0, height: 72.0)
+            KFImage(URL(string: pokemon.sprites?.frontDefault ?? ""))
+                .placeholder { ProgressView() }
+                .downsampling(size: CGSize(width: 72.0, height: 72.0))
+                .aspectRatio(contentMode: .fill)
 
             VStack(alignment: .leading) {
                 Text("\(pokemon.name?.capitalized ?? "Name")")
@@ -39,7 +36,7 @@ struct PokemonCellView: View {
                 Text("Y").frame(width: 30.0, height: 30.0)
             }
         }
-        .frame(maxWidth: .infinity, maxHeight: 80.0)
+        .frame(maxWidth: .infinity, minHeight: 80.0)
         .background(rectangle)
         .cornerRadius(16)
     }
