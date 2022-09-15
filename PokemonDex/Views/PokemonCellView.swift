@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PokemonCellView: View {
-    let pokemon: String
+    let pokemon: Pokemon
 
     let rectangle: some View = RoundedRectangle(cornerRadius: 16)
         .fill(Color("PokemonCell"))
@@ -22,7 +22,7 @@ struct PokemonCellView: View {
             Spacer()
 
             VStack(alignment: .leading) {
-                Text("\(pokemon)")
+                Text("\(pokemon.name ?? "Name")")
                     .fontWeight(.semibold)
 
                 Text("#001")
@@ -43,6 +43,11 @@ struct PokemonCellView: View {
 
 struct PokemonCellView_Previews: PreviewProvider {
     static var previews: some View {
-        PokemonCellView(pokemon: "Bulbasaur")
+        PokemonCellView(pokemon: Pokemon(
+            id: 0,
+            name: "Bulbasaur",
+            generation: "I",
+            types: nil,
+            sprites: nil))
     }
 }

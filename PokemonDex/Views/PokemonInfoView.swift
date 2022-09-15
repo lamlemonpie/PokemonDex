@@ -8,12 +8,12 @@
 import SwiftUI
 
 struct PokemonInfoView: View {
-    let pokemon: String
+    let pokemon: Pokemon?
 
     var body: some View {
         NavigationView {
             VStack(spacing: 0) {
-                Text("Info for: \(pokemon)")
+                Text("Info for: \(pokemon?.name ?? "Name")")
                 Spacer()
             }
             .navigationTitle("Pokemon info")
@@ -24,6 +24,11 @@ struct PokemonInfoView: View {
 
 struct PokemonInfoView_Previews: PreviewProvider {
     static var previews: some View {
-        PokemonInfoView(pokemon: "Bulbasaur")
+        PokemonInfoView(pokemon: Pokemon(
+            id: 0,
+            name: "Bulbasaur",
+            generation: "I",
+            types: nil,
+            sprites: nil))
     }
 }

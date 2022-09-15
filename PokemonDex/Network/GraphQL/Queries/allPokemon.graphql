@@ -1,0 +1,14 @@
+query allPokemon {
+  allPokemon {
+    id
+    name
+    generation
+    types {
+      id
+      name
+    }
+    sprites {
+      front_default
+    }
+  }
+}
