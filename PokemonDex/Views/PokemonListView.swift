@@ -68,7 +68,7 @@ struct PokemonListView: View {
         if searchString.isEmpty {
             return []
         } else {
-            return pokemonViewModel.pokemonList.filter { $0.name?.contains(searchString) ?? false }
+            return pokemonViewModel.pokemonList.filter { $0.name.contains(searchString) }
         }
     }
 }

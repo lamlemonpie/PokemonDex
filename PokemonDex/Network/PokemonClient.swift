@@ -37,25 +37,35 @@ final class PokemonClient: PokemonAPI, ObservableObject {
 
             switch result {
             case .success(let queryData):
-                if let pokemons = queryData.data?.allPokemon {
-                    let compactedPokemons = pokemons.compactMap { $0 }
-                    let newPokemons: [Pokemon?] = compactedPokemons.map { pokemon in
-                        guard let id = pokemon.id else { return nil }
-                        guard let types = pokemon.types else { return nil }
-                        let compactedTypes = types.compactMap { $0 }
-                        guard let frontDefault: String = pokemon.sprites?.frontDefault else { return nil }
-                        let sprites = PokemonSprite(frontDefault: frontDefault)
+                if let pokemons = queryData.data?.allPokemon?.compactMap({ $0 }) {
+                    let newPokemons: [Pokemon] = pokemons.compactMap { pokemon in
+                        guard
+                            let id = pokemon.id,
+                            let name = pokemon.name,
+                            let generation = pokemon.generation,
+                            let types = pokemon.types?.compactMap({ $0 }),
+                            let frontDefault = pokemon.sprites?.frontDefault
+                        else {
+                            return nil
+                        }
+
+                        let newTypes: [PokemonType] = types
+                            .map { type in
+                            guard let typeID = type.id, let typeName = type.name else { return nil }
+                            return PokemonType(id: typeID, name: typeName)
+                            }
+                            .compactMap { $0 }
 
                         return Pokemon(
                             id: id,
-                            name: pokemon.name,
-                            generation: pokemon.generation,
-                            types: nil,
-                            sprites: sprites
+                            name: name,
+                            generation: generation,
+                            types: newTypes,
+                            sprites: PokemonSprite(frontDefault: frontDefault)
                         )
                     }
 
-                    self.pokemons = newPokemons.compactMap { $0 }
+                    self.pokemons = newPokemons
                 }
             case .failure(let queryError):
                 print("Error: \(queryError.localizedDescription)")

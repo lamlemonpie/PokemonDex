@@ -28,7 +28,7 @@ struct PokemonInfoView_Previews: PreviewProvider {
             id: 0,
             name: "Bulbasaur",
             generation: "I",
-            types: nil,
+            types: [PokemonType(id: 1, name: "Grass"), PokemonType(id: 1, name: "Poison")],
             sprites: PokemonSprite(frontDefault: "")))
     }
 }

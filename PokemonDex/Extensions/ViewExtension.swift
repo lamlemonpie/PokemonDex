@@ -1,5 +1,5 @@
 //
-//  ViewExtensions.swift
+//  ViewExtension.swift
 //  PokemonDex
 //
 //  Created by Alejandro Larraondo on 9/12/22.
