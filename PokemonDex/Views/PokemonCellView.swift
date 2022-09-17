@@ -60,6 +60,9 @@ struct PokemonCellView_Previews: PreviewProvider {
             name: "Bulbasaur",
             generation: "Generation I",
             types: [PokemonType(id: 1, name: "Grass"), PokemonType(id: 1, name: "Poison")],
-            sprites: PokemonSprite(frontDefault: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png")))
+            sprites: PokemonSprite(
+                frontDefault: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png",
+                frontShiny: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/1.png"
+            )))
     }
 }

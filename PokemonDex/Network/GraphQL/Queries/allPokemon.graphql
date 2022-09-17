@@ -9,6 +9,7 @@ query allPokemon {
     }
     sprites {
       front_default
+      front_shiny
     }
   }
 }

@@ -8,5 +8,5 @@
 import Foundation
 
 enum Constants {
-    static let apolloURL = "https://dex-server.herokuapp.com/"
+    static let apolloURL = "https://pokeapi-ravn.herokuapp.com"
 }

@@ -22,6 +22,7 @@ public final class AllPokemonQuery: GraphQLQuery {
         sprites {
           __typename
           front_default
+          front_shiny
         }
       }
     }
@@ -198,6 +199,7 @@ public final class AllPokemonQuery: GraphQLQuery {
           return [
             GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
             GraphQLField("front_default", type: .scalar(String.self)),
+            GraphQLField("front_shiny", type: .scalar(String.self)),
           ]
         }
 
@@ -207,8 +209,8 @@ public final class AllPokemonQuery: GraphQLQuery {
           self.resultMap = unsafeResultMap
         }
 
-        public init(frontDefault: String? = nil) {
-          self.init(unsafeResultMap: ["__typename": "Sprites", "front_default": frontDefault])
+        public init(frontDefault: String? = nil, frontShiny: String? = nil) {
+          self.init(unsafeResultMap: ["__typename": "Sprites", "front_default": frontDefault, "front_shiny": frontShiny])
         }
 
         public var __typename: String {
@@ -226,6 +228,15 @@ public final class AllPokemonQuery: GraphQLQuery {
           }
           set {
             resultMap.updateValue(newValue, forKey: "front_default")
+          }
+        }
+
+        public var frontShiny: String? {
+          get {
+            return resultMap["front_shiny"] as? String
+          }
+          set {
+            resultMap.updateValue(newValue, forKey: "front_shiny")
           }
         }
       }

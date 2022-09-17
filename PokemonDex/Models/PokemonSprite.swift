@@ -9,4 +9,5 @@ import Foundation
 
 struct PokemonSprite: Equatable, Hashable, Codable {
     let frontDefault: String
+    let frontShiny: String
 }

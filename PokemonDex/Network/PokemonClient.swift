@@ -44,7 +44,8 @@ final class PokemonClient: PokemonAPI, ObservableObject {
                             let name = pokemon.name,
                             let generation = pokemon.generation,
                             let types = pokemon.types?.compactMap({ $0 }),
-                            let frontDefault = pokemon.sprites?.frontDefault
+                            let frontDefault = pokemon.sprites?.frontDefault,
+                            let frontShiny = pokemon.sprites?.frontShiny
                         else {
                             return nil
                         }
@@ -61,7 +62,7 @@ final class PokemonClient: PokemonAPI, ObservableObject {
                             name: name,
                             generation: generation,
                             types: newTypes,
-                            sprites: PokemonSprite(frontDefault: frontDefault)
+                            sprites: PokemonSprite(frontDefault: frontDefault, frontShiny: frontShiny)
                         )
                     }
 
