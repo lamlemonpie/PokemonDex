@@ -8,11 +8,22 @@
 import SwiftUI
 
 extension PokemonType {
-    var image: Image? {
+    var typeImage: Image? {
         var image: Image?
         PokemonTypes.allCases.forEach { type in
             if type.displayName == name {
-                image = type.image
+                image = type.typeImage
+            }
+        }
+
+        return image
+    }
+
+    var tagImage: Image? {
+        var image: Image?
+        PokemonTypes.allCases.forEach { type in
+            if type.displayName == name {
+                image = type.tagImage
             }
         }
 

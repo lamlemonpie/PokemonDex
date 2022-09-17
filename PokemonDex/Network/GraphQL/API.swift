@@ -13,6 +13,7 @@ public final class AllPokemonQuery: GraphQLQuery {
         __typename
         id
         name
+        color
         generation
         types {
           __typename
@@ -70,6 +71,7 @@ public final class AllPokemonQuery: GraphQLQuery {
           GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
           GraphQLField("id", type: .scalar(Int.self)),
           GraphQLField("name", type: .scalar(String.self)),
+          GraphQLField("color", type: .scalar(String.self)),
           GraphQLField("generation", type: .scalar(String.self)),
           GraphQLField("types", type: .list(.object(`Type`.selections))),
           GraphQLField("sprites", type: .object(Sprite.selections)),
@@ -82,8 +84,8 @@ public final class AllPokemonQuery: GraphQLQuery {
         self.resultMap = unsafeResultMap
       }
 
-      public init(id: Int? = nil, name: String? = nil, generation: String? = nil, types: [`Type`?]? = nil, sprites: Sprite? = nil) {
-        self.init(unsafeResultMap: ["__typename": "Pokemon", "id": id, "name": name, "generation": generation, "types": types.flatMap { (value: [`Type`?]) -> [ResultMap?] in value.map { (value: `Type`?) -> ResultMap? in value.flatMap { (value: `Type`) -> ResultMap in value.resultMap } } }, "sprites": sprites.flatMap { (value: Sprite) -> ResultMap in value.resultMap }])
+      public init(id: Int? = nil, name: String? = nil, color: String? = nil, generation: String? = nil, types: [`Type`?]? = nil, sprites: Sprite? = nil) {
+        self.init(unsafeResultMap: ["__typename": "Pokemon", "id": id, "name": name, "color": color, "generation": generation, "types": types.flatMap { (value: [`Type`?]) -> [ResultMap?] in value.map { (value: `Type`?) -> ResultMap? in value.flatMap { (value: `Type`) -> ResultMap in value.resultMap } } }, "sprites": sprites.flatMap { (value: Sprite) -> ResultMap in value.resultMap }])
       }
 
       public var __typename: String {
@@ -110,6 +112,16 @@ public final class AllPokemonQuery: GraphQLQuery {
         }
         set {
           resultMap.updateValue(newValue, forKey: "name")
+        }
+      }
+
+      /// basic color of the queried Pokemon
+      public var color: String? {
+        get {
+          return resultMap["color"] as? String
+        }
+        set {
+          resultMap.updateValue(newValue, forKey: "color")
         }
       }
 

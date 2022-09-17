@@ -39,9 +39,9 @@ struct PokemonCellView: View {
             HStack {
                 ForEach(pokemon.types, id: \.id) { type in
                     type
-                        .image?
+                        .typeImage?
                         .frame(width: 30.0, height: 30.0)
-                        .padding(.trailing, 10)
+                        .padding(.trailing, 10.0)
                 }
             }
             .frame(minWidth: 80.0)
@@ -58,6 +58,7 @@ struct PokemonCellView_Previews: PreviewProvider {
         PokemonCellView(pokemon: Pokemon(
             id: 1,
             name: "Bulbasaur",
+            color: "green",
             generation: "Generation I",
             types: [PokemonType(id: 1, name: "Grass"), PokemonType(id: 1, name: "Poison")],
             sprites: PokemonSprite(

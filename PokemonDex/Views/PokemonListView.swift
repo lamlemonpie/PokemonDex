@@ -51,7 +51,12 @@ struct PokemonListView: View {
                     .searchable(text: $searchString, placement: .navigationBarDrawer(displayMode: .automatic)) {
                         ForEach(searchResults, id: \.self) { result in
                             PokemonCellView(pokemon: result)
+                                .onTapGesture {
+                                    selectedPokemon = result
+                                    isCellClicked = true
+                                }
                         }
+                        .listRowSeparator(.hidden)
                     }
                 }
             }
@@ -68,7 +73,7 @@ struct PokemonListView: View {
         if searchString.isEmpty {
             return []
         } else {
-            return pokemonViewModel.pokemonList.filter { $0.name.contains(searchString) }
+            return pokemonViewModel.pokemonList.filter { $0.name.contains(searchString.lowercased()) }
         }
     }
 }

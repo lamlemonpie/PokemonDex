@@ -42,6 +42,7 @@ final class PokemonClient: PokemonAPI, ObservableObject {
                         guard
                             let id = pokemon.id,
                             let name = pokemon.name,
+                            let color = pokemon.color,
                             let generation = pokemon.generation,
                             let types = pokemon.types?.compactMap({ $0 }),
                             let frontDefault = pokemon.sprites?.frontDefault,
@@ -52,14 +53,15 @@ final class PokemonClient: PokemonAPI, ObservableObject {
 
                         let newTypes: [PokemonType] = types
                             .map { type in
-                            guard let typeID = type.id, let typeName = type.name else { return nil }
-                            return PokemonType(id: typeID, name: typeName)
+                                guard let typeID = type.id, let typeName = type.name else { return nil }
+                                return PokemonType(id: typeID, name: typeName)
                             }
                             .compactMap { $0 }
 
                         return Pokemon(
                             id: id,
                             name: name,
+                            color: color,
                             generation: generation,
                             types: newTypes,
                             sprites: PokemonSprite(frontDefault: frontDefault, frontShiny: frontShiny)

@@ -2,6 +2,7 @@ query allPokemon {
   allPokemon {
     id
     name
+    color
     generation
     types {
       id
