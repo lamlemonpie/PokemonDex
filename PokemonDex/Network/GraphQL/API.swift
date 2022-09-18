@@ -25,6 +25,15 @@ public final class AllPokemonQuery: GraphQLQuery {
           front_default
           front_shiny
         }
+        evolves_to {
+          __typename
+          id
+          name
+          sprites {
+            __typename
+            front_default
+          }
+        }
       }
     }
     """
@@ -75,6 +84,7 @@ public final class AllPokemonQuery: GraphQLQuery {
           GraphQLField("generation", type: .scalar(String.self)),
           GraphQLField("types", type: .list(.object(`Type`.selections))),
           GraphQLField("sprites", type: .object(Sprite.selections)),
+          GraphQLField("evolves_to", type: .list(.object(EvolvesTo.selections))),
         ]
       }
 
@@ -84,8 +94,8 @@ public final class AllPokemonQuery: GraphQLQuery {
         self.resultMap = unsafeResultMap
       }
 
-      public init(id: Int? = nil, name: String? = nil, color: String? = nil, generation: String? = nil, types: [`Type`?]? = nil, sprites: Sprite? = nil) {
-        self.init(unsafeResultMap: ["__typename": "Pokemon", "id": id, "name": name, "color": color, "generation": generation, "types": types.flatMap { (value: [`Type`?]) -> [ResultMap?] in value.map { (value: `Type`?) -> ResultMap? in value.flatMap { (value: `Type`) -> ResultMap in value.resultMap } } }, "sprites": sprites.flatMap { (value: Sprite) -> ResultMap in value.resultMap }])
+      public init(id: Int? = nil, name: String? = nil, color: String? = nil, generation: String? = nil, types: [`Type`?]? = nil, sprites: Sprite? = nil, evolvesTo: [EvolvesTo?]? = nil) {
+        self.init(unsafeResultMap: ["__typename": "Pokemon", "id": id, "name": name, "color": color, "generation": generation, "types": types.flatMap { (value: [`Type`?]) -> [ResultMap?] in value.map { (value: `Type`?) -> ResultMap? in value.flatMap { (value: `Type`) -> ResultMap in value.resultMap } } }, "sprites": sprites.flatMap { (value: Sprite) -> ResultMap in value.resultMap }, "evolves_to": evolvesTo.flatMap { (value: [EvolvesTo?]) -> [ResultMap?] in value.map { (value: EvolvesTo?) -> ResultMap? in value.flatMap { (value: EvolvesTo) -> ResultMap in value.resultMap } } }])
       }
 
       public var __typename: String {
@@ -152,6 +162,16 @@ public final class AllPokemonQuery: GraphQLQuery {
         }
         set {
           resultMap.updateValue(newValue?.resultMap, forKey: "sprites")
+        }
+      }
+
+      /// array of Pokemon that the queried Pokemon can evolve into
+      public var evolvesTo: [EvolvesTo?]? {
+        get {
+          return (resultMap["evolves_to"] as? [ResultMap?]).flatMap { (value: [ResultMap?]) -> [EvolvesTo?] in value.map { (value: ResultMap?) -> EvolvesTo? in value.flatMap { (value: ResultMap) -> EvolvesTo in EvolvesTo(unsafeResultMap: value) } } }
+        }
+        set {
+          resultMap.updateValue(newValue.flatMap { (value: [EvolvesTo?]) -> [ResultMap?] in value.map { (value: EvolvesTo?) -> ResultMap? in value.flatMap { (value: EvolvesTo) -> ResultMap in value.resultMap } } }, forKey: "evolves_to")
         }
       }
 
@@ -249,6 +269,105 @@ public final class AllPokemonQuery: GraphQLQuery {
           }
           set {
             resultMap.updateValue(newValue, forKey: "front_shiny")
+          }
+        }
+      }
+
+      public struct EvolvesTo: GraphQLSelectionSet {
+        public static let possibleTypes: [String] = ["Pokemon"]
+
+        public static var selections: [GraphQLSelection] {
+          return [
+            GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
+            GraphQLField("id", type: .scalar(Int.self)),
+            GraphQLField("name", type: .scalar(String.self)),
+            GraphQLField("sprites", type: .object(Sprite.selections)),
+          ]
+        }
+
+        public private(set) var resultMap: ResultMap
+
+        public init(unsafeResultMap: ResultMap) {
+          self.resultMap = unsafeResultMap
+        }
+
+        public init(id: Int? = nil, name: String? = nil, sprites: Sprite? = nil) {
+          self.init(unsafeResultMap: ["__typename": "Pokemon", "id": id, "name": name, "sprites": sprites.flatMap { (value: Sprite) -> ResultMap in value.resultMap }])
+        }
+
+        public var __typename: String {
+          get {
+            return resultMap["__typename"]! as! String
+          }
+          set {
+            resultMap.updateValue(newValue, forKey: "__typename")
+          }
+        }
+
+        public var id: Int? {
+          get {
+            return resultMap["id"] as? Int
+          }
+          set {
+            resultMap.updateValue(newValue, forKey: "id")
+          }
+        }
+
+        public var name: String? {
+          get {
+            return resultMap["name"] as? String
+          }
+          set {
+            resultMap.updateValue(newValue, forKey: "name")
+          }
+        }
+
+        /// array of Sprite objects
+        public var sprites: Sprite? {
+          get {
+            return (resultMap["sprites"] as? ResultMap).flatMap { Sprite(unsafeResultMap: $0) }
+          }
+          set {
+            resultMap.updateValue(newValue?.resultMap, forKey: "sprites")
+          }
+        }
+
+        public struct Sprite: GraphQLSelectionSet {
+          public static let possibleTypes: [String] = ["Sprites"]
+
+          public static var selections: [GraphQLSelection] {
+            return [
+              GraphQLField("__typename", type: .nonNull(.scalar(String.self))),
+              GraphQLField("front_default", type: .scalar(String.self)),
+            ]
+          }
+
+          public private(set) var resultMap: ResultMap
+
+          public init(unsafeResultMap: ResultMap) {
+            self.resultMap = unsafeResultMap
+          }
+
+          public init(frontDefault: String? = nil) {
+            self.init(unsafeResultMap: ["__typename": "Sprites", "front_default": frontDefault])
+          }
+
+          public var __typename: String {
+            get {
+              return resultMap["__typename"]! as! String
+            }
+            set {
+              resultMap.updateValue(newValue, forKey: "__typename")
+            }
+          }
+
+          public var frontDefault: String? {
+            get {
+              return resultMap["front_default"] as? String
+            }
+            set {
+              resultMap.updateValue(newValue, forKey: "front_default")
+            }
           }
         }
       }

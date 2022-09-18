@@ -11,7 +11,6 @@ import Combine
 final class PokemonViewModel: ObservableObject {
     private var client: PokemonAPI
     private var cancellables = Set<AnyCancellable>()
-    private var modelKey = "pokemonViewModel"
     private var restoredFromUserDefaults = false
 
     @Published var pokemonList: [Pokemon] = [] {
@@ -54,13 +53,13 @@ final class PokemonViewModel: ObservableObject {
     func saveToUserDefaults() {
         let encoder = JSONEncoder()
         if let data = try? encoder.encode(pokemonList) {
-            UserDefaults.standard.set(data, forKey: modelKey)
+            UserDefaults.standard.set(data, forKey: Constants.pokemonViewModelKey)
         }
     }
 
     func restoreFromUserDefaults() {
         let decoder = JSONDecoder()
-        if  let data = UserDefaults.standard.data(forKey: modelKey),
+        if  let data = UserDefaults.standard.data(forKey: Constants.pokemonViewModelKey),
             let decodedPokemons = try? decoder.decode([Pokemon].self, from: data) {
             pokemonList = decodedPokemons
             restoredFromUserDefaults = true

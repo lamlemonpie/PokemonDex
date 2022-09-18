@@ -14,4 +14,5 @@ struct Pokemon: Identifiable, Hashable, Codable {
     let generation: String
     let types: [PokemonType]
     let sprites: PokemonSprite
+    let evolutions: [PokemonEvolution]?
 }

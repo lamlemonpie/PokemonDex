@@ -55,15 +55,6 @@ struct PokemonCellView: View {
 
 struct PokemonCellView_Previews: PreviewProvider {
     static var previews: some View {
-        PokemonCellView(pokemon: Pokemon(
-            id: 1,
-            name: "Bulbasaur",
-            color: "green",
-            generation: "Generation I",
-            types: [PokemonType(id: 1, name: "Grass"), PokemonType(id: 1, name: "Poison")],
-            sprites: PokemonSprite(
-                frontDefault: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png",
-                frontShiny: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/1.png"
-            )))
+        PokemonCellView(pokemon: Constants.pokemonDummy)
     }
 }

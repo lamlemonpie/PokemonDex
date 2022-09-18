@@ -37,39 +37,7 @@ final class PokemonClient: PokemonAPI, ObservableObject {
 
             switch result {
             case .success(let queryData):
-                if let pokemons = queryData.data?.allPokemon?.compactMap({ $0 }) {
-                    let newPokemons: [Pokemon] = pokemons.compactMap { pokemon in
-                        guard
-                            let id = pokemon.id,
-                            let name = pokemon.name,
-                            let color = pokemon.color,
-                            let generation = pokemon.generation,
-                            let types = pokemon.types?.compactMap({ $0 }),
-                            let frontDefault = pokemon.sprites?.frontDefault,
-                            let frontShiny = pokemon.sprites?.frontShiny
-                        else {
-                            return nil
-                        }
-
-                        let newTypes: [PokemonType] = types
-                            .map { type in
-                                guard let typeID = type.id, let typeName = type.name else { return nil }
-                                return PokemonType(id: typeID, name: typeName)
-                            }
-                            .compactMap { $0 }
-
-                        return Pokemon(
-                            id: id,
-                            name: name,
-                            color: color,
-                            generation: generation,
-                            types: newTypes,
-                            sprites: PokemonSprite(frontDefault: frontDefault, frontShiny: frontShiny)
-                        )
-                    }
-
-                    self.pokemons = newPokemons
-                }
+                self.unwrapPokemons(of: queryData)
             case .failure(let queryError):
                 print("Error: \(queryError.localizedDescription)")
             }
@@ -78,6 +46,58 @@ final class PokemonClient: PokemonAPI, ObservableObject {
         }
     }
 
-    func pokemonDetail() {
+    func unwrapPokemons(of queryData: GraphQLResult<AllPokemonQuery.Data>) {
+        if let pokemons = queryData.data?.allPokemon?.compactMap({ $0 }) {
+            let newPokemons: [Pokemon] = pokemons.compactMap { pokemon in
+                guard
+                    let id = pokemon.id,
+                    let name = pokemon.name,
+                    let color = pokemon.color,
+                    let generation = pokemon.generation,
+                    let types = pokemon.types?.compactMap({ $0 }),
+                    let frontDefault = pokemon.sprites?.frontDefault,
+                    let frontShiny = pokemon.sprites?.frontShiny
+                else {
+                    return nil
+                }
+
+                let newTypes: [PokemonType] = types.map { type in
+                    guard let typeID = type.id, let typeName = type.name else { return nil }
+                    return PokemonType(id: typeID, name: typeName)
+                }
+                .compactMap { $0 }
+
+                var newEvolutions: [PokemonEvolution]?
+                if let evolutions = pokemon.evolvesTo?.compactMap({ $0 }) {
+                    let mappedEvolutions: [PokemonEvolution?] = evolutions.map { evol in
+                        guard
+                            let evolID = evol.id,
+                            let name = evol.name,
+                            let frontSprinte = evol.sprites?.frontDefault
+                        else { return nil }
+
+                        return PokemonEvolution(
+                            id: evolID,
+                            name: name,
+                            sprites: PokemonSprite(frontDefault: frontSprinte, frontShiny: "")
+                        )
+                    }
+
+                    newEvolutions = mappedEvolutions.compactMap { $0 }
+                }
+
+                return Pokemon(
+                    id: id,
+                    name: name,
+                    color: color,
+                    generation: generation,
+                    types: newTypes,
+                    sprites: PokemonSprite(frontDefault: frontDefault, frontShiny: frontShiny),
+                    evolutions: newEvolutions
+                )
+            }
+
+            self.pokemons = newPokemons
+        }
     }
 }

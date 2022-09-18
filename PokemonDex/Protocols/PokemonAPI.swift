@@ -21,5 +21,4 @@ protocol PokemonAPI {
     var pokemonsPublisher: Published<[Pokemon]>.Publisher { get }
 
     func allPokemon()
-    func pokemonDetail()
 }
