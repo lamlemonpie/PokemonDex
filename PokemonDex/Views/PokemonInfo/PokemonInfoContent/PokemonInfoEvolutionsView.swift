@@ -11,13 +11,13 @@ struct PokemonInfoEvolutionsView: View {
     let pokemon: Pokemon
 
     var body: some View {
-        ScrollView {
+        VStack {
             if let evolutions = pokemon.evolutions {
                 Text("Evolutions")
                     .font(.title3)
                     .fontWeight(.regular)
 
-                VStack {
+                ScrollView {
                     ForEach(evolutions, id: \.id) { evolution in
                         HStack(alignment: .center) {
                             Spacer()

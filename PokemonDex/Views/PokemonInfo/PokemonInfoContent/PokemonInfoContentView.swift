@@ -41,9 +41,11 @@ struct PokemonInfoContentView: View {
                 Text("This is the pokemon description")
                     .font(.footnote)
 
-                Divider()
+                if !(pokemon.evolutions?.isEmpty ?? true) {
+                    Divider()
 
-                PokemonInfoEvolutionsView(pokemon: pokemon)
+                    PokemonInfoEvolutionsView(pokemon: pokemon)
+                }
 
                 Spacer()
             }
