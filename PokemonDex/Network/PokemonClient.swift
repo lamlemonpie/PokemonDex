@@ -48,13 +48,11 @@ final class PokemonClient: PokemonProtocol, ObservableObject {
             queue: .main
         ) { [weak self] result in
             guard let self = self else { return }
-            print("res: \(result)")
             switch result {
             case .success(let queryData):
                 self.unwrapPokemons(of: queryData)
             case .failure(let queryError):
                 self.error = queryError
-                print("Error: \(queryError.localizedDescription)")
             }
 
             self.isLoading = false
@@ -135,7 +133,6 @@ final class PokemonClient: PokemonProtocol, ObservableObject {
                 decoder.keyDecodingStrategy = .convertFromSnakeCase
 
                 guard let dataResponse = try? decoder.decode(PokemonSpecies.self, from: res.data) else {
-                    print("decoding error")
                     throw NetworkError.failedToDecode
                 }
 

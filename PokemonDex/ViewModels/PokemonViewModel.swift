@@ -13,6 +13,7 @@ final class PokemonViewModel: ObservableObject {
     private var networkMonitor: NetworkProtocol
     private var cancellables = Set<AnyCancellable>()
     private var restoredFromUserDefaults = false
+    private var savedToUsedDefaults = false
     var networkStatusError = NetworkStatus.disconnected
 
     @Published var pokemonList: [Pokemon] = [] {
@@ -50,6 +51,7 @@ final class PokemonViewModel: ObservableObject {
 
             client
                 .pokemonsPublisher
+                .dropFirst()
                 .sink { pokemons in
                     self.pokemonList = pokemons
                 }
@@ -65,7 +67,7 @@ final class PokemonViewModel: ObservableObject {
     }
 
     func allPokemon() {
-        if !restoredFromUserDefaults {
+        if !restoredFromUserDefaults && !savedToUsedDefaults {
             client.allPokemon()
         }
     }
@@ -111,6 +113,7 @@ final class PokemonViewModel: ObservableObject {
         let encoder = JSONEncoder()
         if let data = try? encoder.encode(pokemonList) {
             UserDefaults.standard.set(data, forKey: Constants.pokemonViewModelKey)
+            savedToUsedDefaults = true
         }
     }
 
