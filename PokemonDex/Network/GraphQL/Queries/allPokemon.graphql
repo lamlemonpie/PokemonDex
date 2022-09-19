@@ -1,0 +1,23 @@
+query allPokemon {
+  allPokemon {
+    id
+    name
+    color
+    generation
+    types {
+      id
+      name
+    }
+    sprites {
+      front_default
+      front_shiny
+    }
+    evolves_to {
+      id
+      name
+      sprites {
+        front_default
+      }
+    }
+  }
+}
