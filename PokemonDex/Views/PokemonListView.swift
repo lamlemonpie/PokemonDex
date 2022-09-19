@@ -20,6 +20,8 @@ struct PokemonListView: View {
             VStack {
                 if pokemonViewModel.isLoading {
                     ProgressView()
+                } else if pokemonViewModel.hasNetworkStatusError {
+                    Image("NetworkLost").resizable().frame(width: 160.0, height: 160.0)
                 } else {
                     ScrollView {
                         HStack(alignment: .center) {
