@@ -9,6 +9,7 @@ import SwiftUI
 
 struct PokemonInfoContentView: View {
     let pokemon: Pokemon
+    @EnvironmentObject var pokemonViewModel: PokemonViewModel
 
     var pokemonBackgroundColor: Color {
         guard let pokemonColor = pokemon.colorValue else { return .white }
@@ -36,10 +37,22 @@ struct PokemonInfoContentView: View {
                 }
 
                 Text(pokemon.generation)
-                    .padding(.init(top: 21.0, leading: 0.0, bottom: 16.0, trailing: 0.0))
+                    .padding(.top, 21.0)
 
-                Text("This is the pokemon description")
-                    .font(.footnote)
+                if pokemonViewModel.isDetailsLoading {
+                    ProgressView()
+                        .padding(16.0)
+                } else {
+                    if let description = pokemonViewModel.pokemonDescription {
+                        Text(description)
+                            .font(.footnote)
+                            .padding(16.0)
+                    } else {
+                        Text("Description not available")
+                            .font(.footnote)
+                            .padding(16.0)
+                    }
+                }
 
                 if !(pokemon.evolutions?.isEmpty ?? true) {
                     Divider()

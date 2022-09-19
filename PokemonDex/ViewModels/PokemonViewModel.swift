@@ -19,6 +19,11 @@ final class PokemonViewModel: ObservableObject {
         }
     }
     @Published var isLoading = false
+    @Published var isDetailsLoading = false
+    @Published var hasError = false
+    @Published var error: NetworkError?
+
+    @Published var pokemonDescription: String?
 
     init(client: PokemonAPI = PokemonClient()) {
         self.client = client
@@ -47,6 +52,43 @@ final class PokemonViewModel: ObservableObject {
         if !restoredFromUserDefaults {
             client.allPokemon()
         }
+    }
+
+    func getPokemonDescription(pokemonID: Int) {
+        self.pokemonDescription = nil
+        isDetailsLoading = true
+
+        client
+            .getPokemonDescription(pokemonID: pokemonID)
+            .sink { [weak self] res in
+                guard let self = self else { return }
+
+                switch res {
+                case .failure(let error):
+                    self.hasError = true
+                    self.error = .custom(error: error)
+                default:
+                    break
+                }
+
+                self.isDetailsLoading = false
+            } receiveValue: { [weak self] receivedValue in
+                guard let self = self else { return }
+
+                let localizedFlavorTexts: [String] = receivedValue.flavorTextEntries?.compactMap { entry in
+                    if entry.language.name == "en" {
+                        return entry.flavorText.components(separatedBy: .newlines).joined(separator: " ")
+                    } else {
+                        return nil
+                    }
+                } ?? []
+
+                let description = (localizedFlavorTexts.first != nil) ? localizedFlavorTexts.first : nil
+
+                self.pokemonDescription = description
+                self.isDetailsLoading = false
+            }
+            .store(in: &cancellables)
     }
 
 

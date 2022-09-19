@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct PokemonInfoEvolutionsView: View {
+    @EnvironmentObject var pokemonViewModel: PokemonViewModel
     let pokemon: Pokemon
 
     var body: some View {
@@ -19,26 +20,37 @@ struct PokemonInfoEvolutionsView: View {
 
                 ScrollView {
                     ForEach(evolutions, id: \.id) { evolution in
+                        let evolutionPokemon: Pokemon? = pokemonViewModel.pokemonList.first { poke in
+                            poke.id == evolution.id && poke.name == evolution.name
+                        }
+
                         HStack(alignment: .center) {
                             Spacer()
 
-                            PokemonSmallView(pokemon: pokemon)
+                            PokemonSmallView(pokemon: pokemon, isActive: false)
 
                             Image("ArrowDown")
                                 .resizable()
                                 .frame(width: 24.0, height: 24.0)
+                                .padding(.horizontal, 20.0)
 
-                            PokemonSmallView(pokemon: Pokemon(
-                                id: evolution.id,
-                                name: evolution.name,
-                                color: "",
-                                generation: "",
-                                types: [],
-                                sprites: PokemonSprite(
-                                    frontDefault: evolution.sprites.frontDefault,
-                                    frontShiny: evolution.sprites.frontShiny),
-                                evolutions: nil)
-                            )
+                            if let evolutionPokemon = evolutionPokemon {
+                                PokemonSmallView(pokemon: evolutionPokemon)
+                            } else {
+                                PokemonSmallView(
+                                    pokemon: Pokemon(
+                                    id: evolution.id,
+                                    name: evolution.name,
+                                    color: "",
+                                    generation: "",
+                                    types: [],
+                                    sprites: PokemonSprite(
+                                        frontDefault: evolution.sprites.frontDefault,
+                                        frontShiny: evolution.sprites.frontShiny),
+                                    evolutions: nil),
+                                    isActive: false
+                                )
+                            }
 
                             Spacer()
                         }

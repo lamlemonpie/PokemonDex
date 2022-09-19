@@ -10,6 +10,10 @@ import Kingfisher
 
 struct PokemonSmallView: View {
     let pokemon: Pokemon
+    var isActive = true
+    @State var isClicked = false
+
+    @EnvironmentObject var pokemonViewModel: PokemonViewModel
 
     let circle: some View = Circle()
         .fill(Color("PokemonCell"))
@@ -26,6 +30,19 @@ struct PokemonSmallView: View {
                 .fontWeight(.semibold)
 
             Text(String(format: "#%03d", pokemon.id))
+
+            NavigationLink(
+                destination: PokemonInfoView(pokemon: pokemon),
+                isActive: $isClicked) {
+                EmptyView()
+            }
+            .opacity(0)
+        }
+        .onTapGesture {
+            if isActive {
+                isClicked = true
+                pokemonViewModel.getPokemonDescription(pokemonID: pokemon.id)
+            }
         }
     }
 }

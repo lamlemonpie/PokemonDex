@@ -10,6 +10,7 @@ import Apollo
 import Combine
 
 final class PokemonClient: PokemonAPI, ObservableObject {
+    var session: URLSession
     static var shared = PokemonClient()
     private(set) var apollo: ApolloClient?
 
@@ -21,9 +22,12 @@ final class PokemonClient: PokemonAPI, ObservableObject {
     var isLoadingPublished: Published<Bool> { _isLoading }
     var isLoadingPublisher: Published<Bool>.Publisher { $isLoading }
 
-    init(apolloURL: String = Constants.apolloURL) {
-        guard let url = URL(string: apolloURL) else { return }
+    @Published var pokemonDescription = ""
 
+    init(apolloURL: String = Constants.apolloURL, session: URLSession = .shared) {
+        self.session = session
+
+        guard let url = URL(string: apolloURL) else { return }
         self.apollo = ApolloClient(url: url)
     }
 
@@ -99,5 +103,33 @@ final class PokemonClient: PokemonAPI, ObservableObject {
 
             self.pokemons = newPokemons
         }
+    }
+
+    func getPokemonDescription(pokemonID: Int) -> AnyPublisher<PokemonSpecies, Error> {
+        guard let url = URL(string: Constants.restURL + String(pokemonID)) else {
+            return Fail(error: NetworkError.invalidURL)
+                .eraseToAnyPublisher()
+        }
+
+        return session
+            .dataTaskPublisher(for: url)
+            .receive(on: DispatchQueue.main)
+            .tryMap { res -> PokemonSpecies in
+                if  let response = res.response as? HTTPURLResponse,
+                    response.statusCode < 200 || response.statusCode >= 300 {
+                    throw NetworkError.invalidStatusCode(code: response.statusCode)
+                }
+
+                let decoder = JSONDecoder()
+                decoder.keyDecodingStrategy = .convertFromSnakeCase
+
+                guard let dataResponse = try? decoder.decode(PokemonSpecies.self, from: res.data) else {
+                    print("decoding error")
+                    throw NetworkError.failedToDecode
+                }
+
+                return dataResponse
+            }
+            .eraseToAnyPublisher()
     }
 }

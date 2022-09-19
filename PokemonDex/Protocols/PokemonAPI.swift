@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 protocol PokemonAPI {
     var isLoading: Bool { get set }
@@ -21,4 +22,9 @@ protocol PokemonAPI {
     var pokemonsPublisher: Published<[Pokemon]>.Publisher { get }
 
     func allPokemon()
+
+    // REST Endpoint variables
+    var session: URLSession { get }
+    var pokemonDescription: String { get }
+    func getPokemonDescription(pokemonID: Int) -> AnyPublisher<PokemonSpecies, Error> 
 }

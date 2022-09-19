@@ -35,6 +35,9 @@ struct PokemonListView: View {
                             PokemonCellView(pokemon: pokemon)
                                 .onTapGesture {
                                     selectedPokemon = pokemon
+
+                                    pokemonViewModel.getPokemonDescription(pokemonID: pokemon.id)
+
                                     isCellClicked = true
                                 }
                         }
@@ -46,6 +49,7 @@ struct PokemonListView: View {
                             isActive: $isCellClicked) {
                             EmptyView()
                         }
+                        .isDetailLink(false)
                         .opacity(0)
                     }
                     .searchable(text: $searchString, placement: .navigationBarDrawer(displayMode: .automatic)) {
@@ -66,7 +70,8 @@ struct PokemonListView: View {
             .navigationTitle("Pokemon List")
             .navigationBar(backgroundColor: Color("PokemonHeaderBackground"))
         }
-        .navigationViewStyle(StackNavigationViewStyle())
+        .navigationViewStyle(.stack)
+        .environmentObject(pokemonViewModel)
     }
 
     var searchResults: [Pokemon] {

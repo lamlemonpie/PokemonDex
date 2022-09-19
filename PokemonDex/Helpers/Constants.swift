@@ -9,6 +9,8 @@ import Foundation
 
 enum Constants {
     static let apolloURL = "https://dex-server.herokuapp.com/"
+    static let restURL = "https://pokeapi.co/api/v2/pokemon-species/"
+
     static let pokemonViewModelKey = "pokemonViewModel"
 
     static let pokemonDummy = Pokemon(
