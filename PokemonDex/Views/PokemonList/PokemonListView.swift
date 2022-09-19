@@ -15,26 +15,6 @@ struct PokemonListView: View {
 
     @StateObject var pokemonViewModel = PokemonViewModel()
 
-    func generationNumber(_ generation: String) -> Int {
-        if generation == "Generation I" { return 1 }
-        if generation == "Generation II" { return 2 }
-        if generation == "Generation III" { return 3 }
-        if generation == "Generation IV" { return 4 }
-        if generation == "Generation V" { return 5 }
-        if generation == "Generation VI" { return 6 }
-        if generation == "Generation VII" { return 7 }
-        if generation == "Generation VIII" { return 8 }
-
-        return -1
-    }
-
-    var sortedGenerationKeys: [String] {
-        let keys = pokemonViewModel.pokemonSections.keys
-        return keys.sorted { leftValue, rightValue in
-            generationNumber(leftValue) < generationNumber(rightValue)
-        }
-    }
-
     var body: some View {
         NavigationView {
             VStack {
@@ -44,29 +24,10 @@ struct PokemonListView: View {
                     Image("NetworkLost").resizable().frame(width: 160.0, height: 160.0)
                 } else {
                     ScrollView {
-                        ForEach(Array(sortedGenerationKeys), id: \.self) { generation in
-                            HStack(alignment: .center) {
-                                Text(generation)
-
-                                Spacer()
-                            }
-                            .padding(.init(top: 24.0, leading: 24.0, bottom: 0.0, trailing: 24.0))
-
-                            Divider()
-                                .padding(.init(top: 0.0, leading: 24.0, bottom: 16.0, trailing: 24.0))
-
-                            ForEach(pokemonViewModel.pokemonSections[generation] ?? [], id: \.id) { pokemon in
-                                PokemonCellView(pokemon: pokemon)
-                                    .onTapGesture {
-                                        selectedPokemon = pokemon
-
-                                        pokemonViewModel.getPokemonDescription(pokemonID: pokemon.id)
-                                        isCellClicked = true
-                                    }
-                            }
-                            .padding(.init(top: 0.0, leading: 24.0, bottom: 12.0, trailing: 24.0))
-                            .listRowSeparator(.hidden)
-                        }
+                        PokemonListSectionsView(
+                            pokemonSections: pokemonViewModel.pokemonSections,
+                            onTapFuncion: onTapFunction
+                        )
 
                         NavigationLink(
                             destination: PokemonInfoView(pokemon: selectedPokemon),
@@ -77,14 +38,7 @@ struct PokemonListView: View {
                         .opacity(0)
                     }
                     .searchable(text: $searchString, placement: .navigationBarDrawer(displayMode: .automatic)) {
-                        ForEach(searchResults, id: \.self) { result in
-                            PokemonCellView(pokemon: result)
-                                .onTapGesture {
-                                    selectedPokemon = result
-                                    isCellClicked = true
-                                }
-                        }
-                        .listRowSeparator(.hidden)
+                        PokemonListSearchView(searchResults: searchResults, onTapFuncion: onTapFunction)
                     }
                 }
             }
@@ -112,12 +66,21 @@ struct PokemonListView: View {
         .environmentObject(pokemonViewModel)
     }
 
-    var searchResults: [Pokemon] {
+
+    var searchResults: [String: [Pokemon]] {
         if searchString.isEmpty {
-            return []
+            return [:]
         } else {
-            return pokemonViewModel.pokemonList.filter { $0.name.contains(searchString.lowercased()) }
+            let results = pokemonViewModel.pokemonList.filter { $0.name.contains(searchString.lowercased()) }
+            return Dictionary.init(grouping: results) { $0.generation }
         }
+    }
+
+    func onTapFunction(pokemon: Pokemon) {
+        selectedPokemon = pokemon
+
+        pokemonViewModel.getPokemonDescription(pokemonID: pokemon.id)
+        isCellClicked = true
     }
 }
 
