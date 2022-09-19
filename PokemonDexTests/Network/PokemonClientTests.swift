@@ -41,6 +41,8 @@ final class PokemonClientTests: XCTestCase {
         // When
         pokemonClient.allPokemon()
         let pokemonCount: Int = pokemonClient.pokemons.count
+
+        // Then
         XCTAssertEqual(pokemonCount, 1)
     }
 
@@ -54,6 +56,7 @@ final class PokemonClientTests: XCTestCase {
         // When
         pokemonClient.allPokemon()
 
+        // Then
         XCTAssertEqual(pokemonClient.error?.localizedDescription, expectedError.localizedDescription)
     }
 
