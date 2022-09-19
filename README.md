@@ -16,6 +16,7 @@ The project has an other build phase for SwiftLint. It's required to exclude the
 
 # Assumptions
 - Some styles are ommited in favor of default system styles.
+- The app is made as an iPhone only app in mind. It may work with larger devices due to SwiftUI but not completely guaranteed
 
 # Technologies
 - SwiftUI
