@@ -37,6 +37,8 @@ struct PokemonCellView: View {
             Spacer(minLength: 14.0)
 
             HStack {
+                Spacer(minLength: 0)
+
                 ForEach(pokemon.types, id: \.id) { type in
                     type
                         .typeImage?
