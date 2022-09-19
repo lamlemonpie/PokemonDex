@@ -12,7 +12,8 @@ import Combine
 final class PokemonClient: PokemonProtocol, ObservableObject {
     var session: URLSession
     static var shared = PokemonClient()
-    private(set) var apollo: ApolloClient?
+    private(set) var apolloClient: ApolloClientProtocol?
+    @Published var error: Error?
 
     @Published var pokemons: [Pokemon] = []
     var pokemonsPublished: Published<[Pokemon]> { _pokemons }
@@ -24,25 +25,35 @@ final class PokemonClient: PokemonProtocol, ObservableObject {
 
     @Published var pokemonDescription = ""
 
-    init(apolloURL: String = Constants.apolloURL, session: URLSession = .shared) {
+    init(apolloURL: String = Constants.apolloURL, apollo: ApolloClientProtocol? = nil, session: URLSession = .shared) {
         self.session = session
 
-        guard let url = URL(string: apolloURL) else { return }
-        self.apollo = ApolloClient(url: url)
+        if let apolloClient = apollo {
+            self.apolloClient = apolloClient
+        } else {
+            guard let url = URL(string: apolloURL) else { return }
+            self.apolloClient = ApolloClient(url: url)
+        }
     }
 
     func allPokemon() {
-        guard let apollo = apollo else { return }
+        guard let apollo = apolloClient else { return }
 
         isLoading = true
 
-        apollo.fetch(query: AllPokemonQuery()) { [weak self] result in
+        _ = apollo.fetch(
+            query: AllPokemonQuery(),
+            cachePolicy: .returnCacheDataElseFetch,
+            contextIdentifier: nil,
+            queue: .main
+        ) { [weak self] result in
             guard let self = self else { return }
-
+            print("res: \(result)")
             switch result {
             case .success(let queryData):
                 self.unwrapPokemons(of: queryData)
             case .failure(let queryError):
+                self.error = queryError
                 print("Error: \(queryError.localizedDescription)")
             }
 

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct PokemonSpecies: Codable {
+struct PokemonSpecies: Codable, Equatable {
     let id: Int
     let name: String
     let order: Int
@@ -20,10 +20,10 @@ struct PokemonSpecies: Codable {
     let hatchCounter: Int
     let hasGenderDifferences: Bool
     let formsSwitchable: Bool
-    let growthRate: GrowthRate
-    let pokedexNumbers: [PokedexNumber]
+    let growthRate: GrowthRate?
+    let pokedexNumbers: [PokedexNumber]?
     let eggGroups: [EggGroup]?
-    let color: PokemonColor
+    let color: PokemonColor?
     let shape: PokemonShape?
     let evolvesFromSpecies: EvolvesFromSpecies?
     let evolutionChain: EvolutionChain?
@@ -37,117 +37,117 @@ struct PokemonSpecies: Codable {
     let varieties: [Variety]?
 }
 
-struct GrowthRate: Codable {
+struct GrowthRate: Codable, Equatable {
     let name: String
     let url: String
 }
 
-struct PokedexNumber: Codable {
+struct PokedexNumber: Codable, Equatable {
     let entryNumber: Int
     let pokedex: Pokedex
 
-    struct Pokedex: Codable {
+    struct Pokedex: Codable, Equatable {
         let name: String
         let url: String
     }
 }
 
-struct EggGroup: Codable {
+struct EggGroup: Codable, Equatable {
     let name: String
     let url: String
 }
 
-struct PokemonColor: Codable {
+struct PokemonColor: Codable, Equatable {
     let name: String
     let url: String
 }
 
-struct PokemonShape: Codable {
+struct PokemonShape: Codable, Equatable {
     let name: String
     let url: String
 }
 
-struct EvolvesFromSpecies: Codable {
+struct EvolvesFromSpecies: Codable, Equatable {
     let name: String
     let url: String
 }
 
-struct EvolutionChain: Codable {
+struct EvolutionChain: Codable, Equatable {
     let url: String
 }
 
-struct Habitat: Codable {
+struct Habitat: Codable, Equatable {
     let name: String
     let url: String
 }
 
-struct Generation: Codable {
+struct Generation: Codable, Equatable {
     let name: String
     let url: String
 }
 
-struct PokemonName: Codable {
+struct PokemonName: Codable, Equatable {
     let name: String
     let language: Language
 
-    struct Language: Codable {
+    struct Language: Codable, Equatable {
         let name: String
         let url: String
     }
 }
 
-struct PalParkEncounter: Codable {
+struct PalParkEncounter: Codable, Equatable {
     let baseScore: Int
     let rate: Int
     let area: Area
 
-    struct Area: Codable {
+    struct Area: Codable, Equatable {
         let name: String
         let url: String
     }
 }
 
-struct FlavorTextEntry: Codable {
+struct FlavorTextEntry: Codable, Equatable {
     let flavorText: String
     let language: Language
     let version: Version
 
-    struct Language: Codable {
+    struct Language: Codable, Equatable {
         let name: String
         let url: String
     }
 
-    struct Version: Codable {
+    struct Version: Codable, Equatable {
         let name: String
         let url: String
     }
 }
 
-struct FormDescription: Codable {
+struct FormDescription: Codable, Equatable {
     let description: String
     let language: Language
 
-    struct Language: Codable {
+    struct Language: Codable, Equatable {
         let name: String
         let url: String
     }
 }
 
-struct Genera: Codable {
+struct Genera: Codable, Equatable {
     let genus: String
     let language: Language
 
-    struct Language: Codable {
+    struct Language: Codable, Equatable {
         let name: String
         let url: String
     }
 }
 
-struct Variety: Codable {
+struct Variety: Codable, Equatable {
     let isDefault: Bool
     let pokemon: PokemonDetail
 
-    struct PokemonDetail: Codable {
+    struct PokemonDetail: Codable, Equatable {
         let name: String
         let url: String
     }
