@@ -20,6 +20,10 @@ final class PokemonViewModel: ObservableObject {
             saveToUserDefaults()
         }
     }
+    var pokemonSections: [String: [Pokemon]] {
+        Dictionary.init(grouping: pokemonList) { $0.generation }
+    }
+
     @Published var isLoading = false
     @Published var isDetailsLoading = false
     @Published var hasNetworkStatusError = false
@@ -55,7 +59,6 @@ final class PokemonViewModel: ObservableObject {
         networkMonitor
             .statusPublisher
             .sink { status in
-                print("STATUS: \(status)")
                 self.hasNetworkStatusError = status == .disconnected
             }
             .store(in: &cancellables)
@@ -103,7 +106,6 @@ final class PokemonViewModel: ObservableObject {
             }
             .store(in: &cancellables)
     }
-
 
     func saveToUserDefaults() {
         let encoder = JSONEncoder()

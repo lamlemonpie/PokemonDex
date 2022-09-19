@@ -157,6 +157,14 @@
 			path = PokemonInfoContent;
 			sourceTree = "<group>";
 		};
+		785497B928D810A000C15E78 /* PokemonList */ = {
+			isa = PBXGroup;
+			children = (
+				78D1B3EB28CFC8BC00881935 /* PokemonListView.swift */,
+			);
+			path = PokemonList;
+			sourceTree = "<group>";
+		};
 		78BF84EF28D22881001996E2 /* Network */ = {
 			isa = PBXGroup;
 			children = (
@@ -274,8 +282,8 @@
 		78D1B41328CFD7AF00881935 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				785497B928D810A000C15E78 /* PokemonList */,
 				785497A128D696D800C15E78 /* PokemonInfo */,
-				78D1B3EB28CFC8BC00881935 /* PokemonListView.swift */,
 				78D1B41B28CFF28700881935 /* PokemonCellView.swift */,
 			);
 			path = Views;
