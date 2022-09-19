@@ -9,7 +9,7 @@ import Foundation
 import Apollo
 import Combine
 
-final class PokemonClient: PokemonAPI, ObservableObject {
+final class PokemonClient: PokemonProtocol, ObservableObject {
     var session: URLSession
     static var shared = PokemonClient()
     private(set) var apollo: ApolloClient?

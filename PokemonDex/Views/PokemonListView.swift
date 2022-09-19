@@ -11,6 +11,7 @@ struct PokemonListView: View {
     @State var searchString: String = ""
     @State var isCellClicked = false
     @State var selectedPokemon: Pokemon?
+    @State var currentGeneration = "Generation I"
 
     @StateObject var pokemonViewModel = PokemonViewModel()
 
@@ -22,7 +23,7 @@ struct PokemonListView: View {
                 } else {
                     ScrollView {
                         HStack(alignment: .center) {
-                            Text("Generation I")
+                            Text(currentGeneration)
 
                             Spacer()
                         }
@@ -63,6 +64,20 @@ struct PokemonListView: View {
                         .listRowSeparator(.hidden)
                     }
                 }
+            }
+            .alert(isPresented: $pokemonViewModel.hasNetworkStatusError, error: pokemonViewModel.networkStatusError) {
+                Button(
+                    action: { pokemonViewModel.allPokemon() },
+                    label: {
+                        Text("Try Again")
+                    }
+                )
+                Button(
+                    action: { },
+                    label: {
+                        Text("Cancel")
+                    }
+                )
             }
             .onAppear {
                 pokemonViewModel.allPokemon()

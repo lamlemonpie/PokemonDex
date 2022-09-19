@@ -1,5 +1,5 @@
 //
-//  PokemonAPI.swift
+//  PokemonProtocol.swift
 //  PokemonDex
 //
 //  Created by Alejandro Larraondo on 9/14/22.
@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-protocol PokemonAPI {
+protocol PokemonProtocol {
     var isLoading: Bool { get set }
     // (Published property wrapper)
     var isLoadingPublished: Published<Bool> { get }
@@ -26,5 +26,5 @@ protocol PokemonAPI {
     // REST Endpoint variables
     var session: URLSession { get }
     var pokemonDescription: String { get }
-    func getPokemonDescription(pokemonID: Int) -> AnyPublisher<PokemonSpecies, Error> 
+    func getPokemonDescription(pokemonID: Int) -> AnyPublisher<PokemonSpecies, Error>
 }

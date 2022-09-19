@@ -9,9 +9,11 @@ import Foundation
 import Combine
 
 final class PokemonViewModel: ObservableObject {
-    private var client: PokemonAPI
+    private var client: PokemonProtocol
+    private var networkMonitor: NetworkProtocol
     private var cancellables = Set<AnyCancellable>()
     private var restoredFromUserDefaults = false
+    var networkStatusError = NetworkStatus.disconnected
 
     @Published var pokemonList: [Pokemon] = [] {
         didSet {
@@ -20,13 +22,16 @@ final class PokemonViewModel: ObservableObject {
     }
     @Published var isLoading = false
     @Published var isDetailsLoading = false
+    @Published var hasNetworkStatusError = false
     @Published var hasError = false
     @Published var error: NetworkError?
 
     @Published var pokemonDescription: String?
 
-    init(client: PokemonAPI = PokemonClient()) {
+
+    init(client: PokemonProtocol = PokemonClient(), networkMonitor: NetworkProtocol = NetworkMonitor()) {
         self.client = client
+        self.networkMonitor = networkMonitor
 
         restoreFromUserDefaults()
 
@@ -46,6 +51,14 @@ final class PokemonViewModel: ObservableObject {
                 }
                 .store(in: &cancellables)
         }
+
+        networkMonitor
+            .statusPublisher
+            .sink { status in
+                print("STATUS: \(status)")
+                self.hasNetworkStatusError = status == .disconnected
+            }
+            .store(in: &cancellables)
     }
 
     func allPokemon() {
