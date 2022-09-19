@@ -1,5 +1,5 @@
 # PokemonDex
-This app presents all existing pokemon with descriptions of their types, sprites and evolutions. When a pokemon cell is tapped, more detailed information is shown including: type, description and evolutions.
+This app presents all existing pokemon with descriptions of their types, sprites and evolutions. When a pokemon cell is tapped, more detailed information is shown including: default and shiny sprites, type, description and evolutions.
 
 # Overview
 This is follows the MVVM structure. The `PokemonClient` class is in charge of defining the methods to call for the GraphQL and Rest APIs. This class exposes publishers as the data is fetched.
